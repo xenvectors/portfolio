@@ -1,1 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Digital Architect · Portfolio</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Bebas+Neue&family=Oswald:wght@500;700&display=swap');
 
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body {
+            width: 100%; height: 100%;
+            overflow: hidden;
+            background: #030712;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Inter', sans-serif;
+            color: #f9fafb;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        :root {
+            --accent: #c9a55a;
+            --accent-light: #e2c07a;
+            --bg-dark: #030712;
+            --bg-navy: #0a1628;
+            --text-main: #f9fafb;
+            --text-dim: #9ca3af;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(201, 165, 90, 0.2);
+        }
+
+        .stage {
+            width: min(calc(100vh * 9 / 16), 100vw);
+            height: 100vh;
+            background: var(--bg-dark);
+            position: relative; overflow: hidden;
+        }
+
+        .grain {
+            position: absolute; inset: 0; z-index: 100; pointer-events: none;
+            opacity: 0.04;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+        .sparkle {
+            position: absolute; color: var(--accent); pointer-events: none;
+            animation: sparkleAnim var(--d, 3s) ease-in-out infinite;
+            z-index: 5;
+        }
+        @keyframes sparkleAnim {
+            0%, 100% { opacity: 0.2; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .top-badge {
+            position: absolute; top: 32px; left: 50%; transform: translateX(-50%);
+            display: flex; align-items: center; gap: 6px;
+            padding: 5px 14px; border: 1px solid var(--glass-border);
+            border-radius: 40px; font-size: 9px; letter-spacing: 2px;
+            text-transform: uppercase; color: var(--accent); z-index: 110;
+            white-space: nowrap; background: rgba(3, 7, 18, 0.5); backdrop-filter: blur(4px);
+        }
+        .badge-dot {
+            width: 4px; height: 4px; background: var(--accent); border-radius: 50%;
+            animation: blink 1.4s ease-in-out infinite;
+        }
+        @keyframes blink { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+
+        .scene {
+            position: absolute; inset: 0;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            padding: 80px 30px 60px;
+            opacity: 0; pointer-events: none;
+            z-index: 10; text-align: center;
+        }
+        .scene.active {
+            opacity: 1; pointer-events: all;
+            animation: sceneIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes sceneIn {
+            from { opacity: 0; transform: scale(1.05); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .anim { opacity: 0; transform: translateY(25px); }
+        .scene.active .anim {
+            animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .scene.active .anim:nth-child(1) { animation-delay: 0.05s; }
+        .scene.active .anim:nth-child(2) { animation-delay: 0.15s; }
+        .scene.active .anim:nth-child(3) { animation-delay: 0.25s; }
+        .scene.active .anim:nth-child(4) { animation-delay: 0.35s; }
+        .scene.active .anim:nth-child(5) { animation-delay: 0.45s; }
+
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .huge-text {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(3rem, 15vw, 5rem);
+            line-height: 0.9; text-transform: uppercase;
+            margin-bottom: 15px; color: var(--text-main);
+            letter-spacing: 0.02em;
+        }
+        .highlight { color: var(--accent); }
+        .sub-text {
+            font-size: 0.9rem; font-weight: 300; color: var(--text-dim);
+            max-width: 280px; line-height: 1.6;
+        }
+
+        .service-grid {
+            display: flex; flex-direction: column; gap: 12px;
+            width: 100%; margin-top: 30px;
+        }
+        .service-item {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            padding: 20px; border-radius: 16px;
+            text-align: left; transition: 0.3s;
+            display: flex; gap: 16px; align-items: center;
+        }
+        .service-item:hover { background: rgba(201, 165, 90, 0.08); border-color: var(--accent); }
+        .service-num {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem; color: rgba(201, 165, 90, 0.3);
+            line-height: 1;
+        }
+        .service-text h3 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.2rem; color: var(--accent-light);
+            letter-spacing: 1px;
+        }
+        .service-text p { font-size: 0.75rem; color: var(--text-dim); line-height: 1.4; }
+
+        .browser-container {
+            position: relative; width: 100%;
+            display: flex; justify-content: center;
+            margin-top: 20px;
+            animation: float 5s ease-in-out infinite;
+        }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+        .browser-mockup {
+            width: 260px; height: 420px;
+            background: #0d1829;
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.7);
+        }
+        .browser-header {
+            height: 28px; background: rgba(0,0,0,0.4);
+            display: flex; align-items: center; padding: 0 12px; gap: 6px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .dot { width: 6px; height: 6px; border-radius: 50%; }
+        .dot.red { background: #ff5f56; }
+        .dot.yellow { background: #ffbd2e; }
+        .dot.green { background: #27c93f; }
+        .browser-url {
+            flex: 1; height: 14px; background: rgba(255,255,255,0.05);
+            border-radius: 10px; margin-left: 8px;
+        }
+        .scroll-content {
+            width: 100%; height: auto;
+            position: absolute; top: 28px; left: 0;
+            animation: autoScroll 18s linear infinite alternate;
+        }
+        .scroll-content img { width: 100%; display: block; }
+        @keyframes autoScroll { from { transform: translateY(0); } to { transform: translateY(-60%); } }
+
+        .identity-gallery {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px; width: 100%;
+            margin-top: 20px;
+        }
+        .gallery-item {
+            position: relative; border-radius: 12px; overflow: hidden;
+            border: 1px solid var(--glass-border);
+            transition: 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            background: #111;
+        }
+        .gallery-item img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .gallery-item:hover { transform: scale(1.03); border-color: var(--accent); z-index: 10; }
+        .gallery-item:hover img { transform: scale(1.1); }
+        .gallery-item.tall { aspect-ratio: 2/3; }
+        .gallery-item.square { aspect-ratio: 1/1; }
+        .gallery-item.wide { grid-column: span 2; aspect-ratio: 16/9; }
+
+        .gallery-label {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            padding: 10px; background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            color: #fff; font-size: 0.5rem; text-transform: uppercase;
+            letter-spacing: 1px; font-weight: 600; opacity: 0;
+            transform: translateY(5px); transition: 0.3s ease;
+        }
+        .gallery-item:hover .gallery-label { opacity: 1; transform: translateY(0); }
+
+        .cta-btn {
+            margin-top: 30px; padding: 16px 32px;
+            background: var(--accent); color: #000;
+            border-radius: 100px; text-decoration: none;
+            font-weight: 800; text-transform: uppercase;
+            font-size: 0.8rem; letter-spacing: 1px;
+            transition: 0.3s;
+            box-shadow: 0 0 25px rgba(201, 165, 90, 0.4);
+            animation: glow 3s ease-in-out infinite;
+        }
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 15px rgba(201, 165, 90, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(201, 165, 90, 0.6); }
+        }
+        .cta-btn:hover { transform: scale(1.05); background: var(--accent-light); }
+
+        .cursor-follower {
+            position: absolute; width: 40px; height: 40px;
+            border: 1px solid var(--accent); border-radius: 50%;
+            pointer-events: none; z-index: 200;
+            transition: transform 0.1s ease-out;
+            mix-blend-mode: difference;
+        }
+    </style>
+</head>
+<body>
+    <div class="stage" id="stage">
+        <div class="grain"></div>
+        <div class="cursor-follower" id="cursor"></div>
+        <div class="top-badge">
+            <div class="badge-dot"></div>
+            <span>Available for New Projects</span>
+        </div>
+
+        <div id="sparkles"></div>
+
+        <div class="scene active" id="s1">
+            <h1 class="huge-text anim">Digital<br><span class="highlight">Experiences</span><br>That Scale.</h1>
+            <p class="sub-text anim">I transform visions into high-converting websites and seamless app interfaces.</p>
+        </div>
+
+        <div class="scene" id="s2">
+            <h2 class="huge-text anim">My <span class="highlight">Stack</span></h2>
+            <div class="service-grid">
+                <div class="service-item anim">
+                    <div class="service-num">01</div>
+                    <div class="service-text">
+                        <h3>UI/UX Design</h3>
+                        <p>User-centric interfaces that prioritize conversion and aesthetics.</p>
+                    </div>
+                </div>
+                <div class="service-item anim">
+                    <div class="service-num">02</div>
+                    <div class="service-text">
+                        <h3>Web Development</h3>
+                        <p>Blazing fast, responsive landing pages and complex web apps.</p>
+                    </div>
+                </div>
+                <div class="service-item anim">
+                    <div class="service-num">03</div>
+                    <div class="service-text">
+                        <h3>App Architecture</h3>
+                        <p>Scalable design systems for iOS, Android, and Web platforms.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="scene" id="s3">
+            <h2 class="huge-text anim">Performance<br><span class="highlight">First.</span></h2>
+            <p class="sub-text anim">No templates. No bloat. Just pure, custom-engineered digital products designed to win.</p>
+            <div class="service-grid anim" style="flex-direction: row; flex-wrap: wrap; justify-content: center;">
+                <div class="service-item" style="width: 45%; text-align: center; justify-content: center;">
+                    <div class="service-text">
+                        <h3>FAST</h3>
+                        <p>Optimized assets</p>
+                    </div>
+                </div>
+                <div class="service-item" style="width: 45%; text-align: center; justify-content: center;">
+                    <div class="service-text">
+                        <h3>CLEAN</h3>
+                        <p>Modern code</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="scene" id="s4">
+            <h2 class="huge-text anim">BATI <span class="highlight">Burgers</span></h2>
+            <div class="browser-container anim">
+                <div class="browser-mockup">
+                    <div class="browser-header">
+                        <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+                        <div class="browser-url"></div>
+                    </div>
+                    <div class="scroll-content">
+                        <!-- Replace with your actual base64 string if missing -->
+                        <img src="data:image/png;base64,..." alt="Website Showcase">
+                    </div>
+                </div>
+            </div>
+            <p class="sub-text anim" style="margin-top: 30px;">Full digital ecosystem: from visual identity to a high-performance ordering site.</p>
+        </div>
+
+        <div class="scene" id="s5">
+            <h2 class="huge-text anim">Visual<br><span class="highlight">Architecture</span></h2>
+            <div class="identity-gallery anim">
+                <div class="gallery-item tall">
+                    <img src="data:image/jpeg;base64,..." alt="Brand System">
+                    <div class="gallery-label">Brand System</div>
+                </div>
+                <div class="gallery-item tall">
+                    <img src="data:image/jpeg;base64,..." alt="Guidelines">
+                    <div class="gallery-label">Guidelines</div>
+                </div>
+                <div class="gallery-item square">
+                    <img src="data:image/png;base64,..." alt="Packaging 01">
+                    <div class="gallery-label">Packaging 01</div>
+                </div>
+                <div class="gallery-item square">
+                    <img src="data:image/png;base64,..." alt="Packaging 02">
+                    <div class="gallery-label">Packaging 02</div>
+                </div>
+                <div class="gallery-item wide">
+                    <img src="data:image/jpeg;base64,..." alt="Visual Language">
+                    <div class="gallery-label">Visual Language</div>
+                </div>
+            </div>
+            <p class="sub-text anim" style="margin-top: 20px;">Defining a rigorous system for omnichannel cohesion.</p>
+        </div>
+
+        <div class="scene" id="s6">
+            <h2 class="huge-text anim">Ready to<br><span class="highlight">Level Up?</span></h2>
+            <p class="sub-text anim">Let's collaborate to build a product that sets you apart from the competition.</p>
+            <a href="#" class="cta-btn anim">Start Your Project</a>
+            <p class="sub-text anim" style="margin-top: 20px; font-size: 0.7rem; opacity: 0.5;">DM for inquiries · 2026</p>
+        </div>
+    </div>
+
+    <script>
+        const scenes = document.querySelectorAll('.scene');
+        let currentScene = 0;
+        const SCENE_DURATION = 6000;
+
+        const sparklesContainer = document.getElementById('sparkles');
+        for(let i=0; i<20; i++){
+            const s = document.createElement('div');
+            s.className = 'sparkle';
+            s.innerHTML = '✦';
+            s.style.left = Math.random() * 100 + '%';
+            s.style.top = Math.random() * 100 + '%';
+            s.style.fontSize = (Math.random() * 10 + 10) + 'px';
+            s.style.setProperty('--d', (Math.random() * 3 + 2) + 's');
+            s.style.animationDelay = Math.random() * 5 + 's';
+            sparklesContainer.appendChild(s);
+        }
+
+        function updateScenes() {
+            scenes.forEach((s, i) => {
+                s.classList.remove('active');
+                if(i === currentScene) s.classList.add('active');
+            });
+        }
+
+        function nextScene() {
+            currentScene = (currentScene + 1) % scenes.length;
+            updateScenes();
+        }
+
+        setInterval(nextScene, SCENE_DURATION);
+        updateScenes();
+
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX;
+            const y = e.clientY;
+            cursor.style.transform = `translate(${x - 20}px, ${y - 20}px)`;
+        });
+
+        document.getElementById('stage').addEventListener('click', nextScene);
+    </script>
+</body>
+</html>
